@@ -9,7 +9,7 @@
     }
   ],
   "menu": {
-    "title": "sketch_effects",
+    "title": "Sketch Effects",
     "items": [
       "sketch_effects.my-command-identifier"
     ]
