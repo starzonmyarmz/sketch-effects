@@ -3,15 +3,15 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "my-command",
-      "identifier": "sketch_effects.my-command-identifier",
-      "script": "./my-command.js"
+      "name": "Roughen",
+      "identifier": "roughen",
+      "script": "./roughen.js"
     }
   ],
   "menu": {
     "title": "Sketch Effects",
     "items": [
-      "sketch_effects.my-command-identifier"
+      "roughen"
     ]
   }
 }
