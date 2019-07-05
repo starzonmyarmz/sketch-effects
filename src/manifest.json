@@ -3,7 +3,7 @@
   "description": "Various effects",
   "author": "Daniel Marino",
   "homepage": "https://github.com/starzonmyarmz/sketch-effects",
-  "version": "0.9",
+  "version": "0.2.0",
   "icon": "icon.png",
   "identifier": "com.example.sketch.plugin.sketch-effects",
   "compatibleVersion": "54",
