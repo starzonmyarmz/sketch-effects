@@ -1,6 +1,12 @@
 {
-  "$schema": "https://raw.githubusercontent.com/BohemianCoding/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "name": "Sketch Effects",
+  "description": "Various effects",
+  "author": "Daniel Marino",
+  "homepage": "https://github.com/starzonmyarmz/sketch-effects",
+  "version": "0.9",
   "icon": "icon.png",
+  "identifier": "com.example.sketch.plugin.sketch-effects",
+  "compatibleVersion": "54",
   "commands": [
     {
       "name": "Roughen",
