@@ -12,66 +12,118 @@ export default function() {
 
     let size, detail
 
-    sketch.UI.getInputFromUser(
-      "Size in pixels",
-      { initialValue: '5' },
-      (err, value) => {
-        if (err) {
-          return
-        } else {
-          size = value
+    let ROUGHEN = 1000
+    let READY = true
+    let CANCELLED = false
+    let NOT_READY = null
+
+    function soLetsGo() {
+      let uiResponse = NOT_READY
+
+      while (uiResponse === NOT_READY) {
+        const dialog = createDialog()
+
+        // Show dialog and process the results
+        uiResponse = processButtonClick(dialog, dialog.runModal())
+
+        switch (uiResponse) {
+          case NOT_READY:
+            sketch.UI.message('⚠️ Please enter a number.')
+            break
+          case READY:
+            roughenIt()
+            break
+          case CANCELLED:
+            break
         }
       }
-    )
+    }
 
-    sketch.UI.getInputFromUser(
-      "Level of detail in pixels",
-      { initialValue: '2' },
-      (err, value) => {
-        if (err) {
-          return
+    function createDialog() {
+      const dialogUI = COSAlertWindow.new()
+
+      dialogUI.setIcon(NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed('icon.png').path()))
+      dialogUI.setMessageText('Roughen Shape')
+      dialogUI.setInformativeText('Roughens the path of the currently selected shape.')
+      dialogUI.addTextLabelWithValue('Size')
+      dialogUI.addTextFieldWithValue('5')
+      dialogUI.addTextLabelWithValue('Detail')
+      dialogUI.addTextFieldWithValue('2')
+      dialogUI.addButtonWithTitle('Roughen')
+      dialogUI.addButtonWithTitle('Cancel')
+
+      // Allow tab to switch between inputs
+      var findInput = dialogUI.viewAtIndex(1);
+      var replaceWithInput = dialogUI.viewAtIndex(3);
+      // focus on Find field on start
+      dialogUI.alert().window().setInitialFirstResponder(findInput);
+      findInput.setNextKeyView(replaceWithInput);
+      replaceWithInput.setNextKeyView(findInput);
+
+      return dialogUI
+    }
+
+    // Processes the result of the UI
+    function processButtonClick(dialog, buttonClick) {
+      let result
+
+      if (buttonClick === ROUGHEN) {
+        size = dialog.viewAtIndex(1).stringValue()
+        detail = dialog.viewAtIndex(3).stringValue()
+
+        // Make sure we have text to find
+        if (size != '' && detail != '') {
+          result = READY
         } else {
-          detail = value
+          result = NOT_READY
         }
+      } else {
+        result = CANCELLED
       }
-    )
 
-    // Returns a random number (based on user input) near the exact point
-    const randomPoint = function(num) {
-      return num + Math.random() * detail - detail / 2
+      return result
     }
 
-    const steps = originalPath.length() / size
-    const startingPoint = originalPath.pointOnPathAtLength(0)
+    function roughenIt() {
+      // Returns a random number (based on user input) near the exact point
+      const randomPoint = function(num) {
+        return num + Math.random() * detail - detail / 2
+      }
 
-    // Create the first point of the new path
-    roughenedPath.moveToPoint(NSMakePoint(startingPoint.x, startingPoint.y))
+      const steps = originalPath.length() / size
+      const startingPoint = originalPath.pointOnPathAtLength(0)
 
-    // Loop through each step of the new path
-    for (let i = 1; i <= steps; i++) {
-      let point = originalPath.pointOnPathAtLength(size * i)
+      // Create the first point of the new path
+      roughenedPath.moveToPoint(NSMakePoint(startingPoint.x, startingPoint.y))
 
-      // Create the new random point
-      roughenedPath.lineToPoint(NSMakePoint(randomPoint(point.x), randomPoint(point.y)))
+      // Loop through each step of the new path
+      for (let i = 1; i <= steps; i++) {
+        let point = originalPath.pointOnPathAtLength(size * i)
+
+        // Create the new random point
+        roughenedPath.lineToPoint(NSMakePoint(randomPoint(point.x), randomPoint(point.y)))
+      }
+
+      // Close the new path
+      roughenedPath.closePath()
+
+      // Create the new layer
+      const roughenedLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(roughenedPath))
+
+      // Set Name and Styles of roughened shape
+      roughenedLayer.setName('Roughened ' + originalLayer.name())
+      roughenedLayer.setStyle(originalLayer.style())
+
+      // Add the roughened layer to the document
+      currentPage.addLayers([roughenedLayer])
+
+      // Remove the original layer from the document
+      currentPage.removeLayer(originalLayer);
+
+      sketch.UI.message('🎉 You roughened the shape!')
     }
 
-    // Close the new path
-    roughenedPath.closePath()
-
-    // Create the new layer
-    const roughenedLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(roughenedPath))
-
-    // Set Name and Styles of roughened shape
-    roughenedLayer.setName('Roughened ' + originalLayer.name())
-    roughenedLayer.setStyle(originalLayer.style())
-
-    // Add the roughened layer to the document
-    currentPage.addLayers([roughenedLayer])
-
-    // Remove the original layer from the document
-    currentPage.removeLayer(originalLayer);
-
-    sketch.UI.message('🎉 You roughened the shape!')
+    soLetsGo()
   } else {
     sketch.UI.message('⚠️ Please select only one layer.')
   }
