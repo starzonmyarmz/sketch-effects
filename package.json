@@ -1,7 +1,7 @@
 {
   "name": "sketch_effects",
   "description": "A Sketch plugin with various effects",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "repository": "https://github.com/starzonmyarmz/sketch-effects",
   "engines": {
     "sketch": ">=49.0"
