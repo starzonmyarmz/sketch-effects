@@ -53,10 +53,12 @@ export default function() {
       dialogUI.addButtonWithTitle('Cancel')
 
       // Allow tab to switch between inputs
-      var findInput = dialogUI.viewAtIndex(1);
-      var replaceWithInput = dialogUI.viewAtIndex(3);
+      let findInput = dialogUI.viewAtIndex(1);
+      let replaceWithInput = dialogUI.viewAtIndex(3);
+
       // focus on Find field on start
       dialogUI.alert().window().setInitialFirstResponder(findInput);
+
       findInput.setNextKeyView(replaceWithInput);
       replaceWithInput.setNextKeyView(findInput);
 
