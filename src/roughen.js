@@ -12,7 +12,7 @@ export default function() {
 
     // Sorry, doesn't really work on text or bitmap layers
     if (selection[0].isKindOfClass(MSTextLayer) || selection[0].isKindOfClass(MSBitmapLayer)) {
-      return sketch.UI.message('⚠️ You can only roughen shapes.')
+      return sketch.UI.message('⚠️ You can only roughen shape paths.')
     }
 
     let size, detail
