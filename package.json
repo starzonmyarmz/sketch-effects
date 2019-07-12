@@ -24,5 +24,8 @@
   "devDependencies": {
     "@skpm/builder": "^0.7.0"
   },
-  "author": "Daniel Marino <starzonmyarmz@gmail.com>"
+  "author": "Daniel Marino <starzonmyarmz@gmail.com>",
+  "dependencies": {
+    "skpm": "^1.2.0"
+  }
 }
