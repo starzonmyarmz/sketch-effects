@@ -10,6 +10,11 @@ export default function() {
     const originalPath = originalLayer.pathInFrameWithTransforms()
     const roughenedPath = NSBezierPath.bezierPath()
 
+    // Sorry, doesn't really work on text or bitmap layers
+    if (selection[0].isKindOfClass(MSTextLayer) || selection[0].isKindOfClass(MSBitmapLayer)) {
+      return sketch.UI.message('⚠️ You can only roughen shapes.')
+    }
+
     let size, detail
 
     let ROUGHEN = 1000
